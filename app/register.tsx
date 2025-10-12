@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
-import URL from 'react-native-dotenv';
 
 
-
-const API_URL = `${URL}:5000/api`; // Use your computer's IP
+const API_URL = `192.168.1.54:5000/api`; // Use your computer's IP
 
 export default function RegisterScreen() {
   const router = useRouter();
