@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Alert, TouchableOpacity,} from 'react-native';
 import { useAuth } from '@/context/AuthProvider';
 import { useRouter } from 'expo-router';
 
-const API_URL = 'http://192.168.1.54:5000/api';
+const API_URL = 'http://10.85.108.203:5000/api';
 
 export default function AdminDashboard() {
   const {logout} = useAuth();

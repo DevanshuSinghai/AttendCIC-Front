@@ -1,35 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
 
 
-const API_URL = `192.168.1.54:5000/api`; // Use your computer's IP
+const API_URL = `http://10.85.108.203:5000/api`; // Use your computer's IP
 
 export default function RegisterScreen() {
   const router = useRouter();
   const { role } = useLocalSearchParams(); // Gets ?role=student from URL
 
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [roll_number, setRollNumber] = useState('');
   const [name, setName] = useState('');
+  const [status, setStatus] = useState('');
+  const [enrollment_number, setEnrollmentNumber] = useState('');
+    const [batch_year, setBatchYear] = useState('');
+  const [degree_name, setDegreeName] = useState('');
   const [loading, setLoading] = useState(false);
 
   // Validate role
-  const validRole = ['student', 'teacher', 'admin'].includes(role as string)
-    ? (role as 'student' | 'teacher' | 'admin')
+  const validRole = ['admin'].includes(role as string)
+    ? (role as 'admin')
     : null;
 
   if (!validRole) {
     // Redirect back if no valid role
-    useEffect(() => {
-      router.replace('/RoleSelection');
-    }, []);
+    console.log('This is admin only path')
+    router.replace('/RoleSelection');
+    // useEffect(() => {
+      
+    // }, []);
     return null;
   }
 
   const handleRegister = async () => {
-    if (!email || !password) {
+    if (!email || !status || !roll_number) {
       Alert.alert('Error', 'Please fill all fields');
       return;
     }
@@ -38,12 +44,16 @@ export default function RegisterScreen() {
     try {
       const response = await axios.post(`${API_URL}/auth/register`, {
         email,
-        password,
+        roll_number,
+        enrollment_number,
         name,
+        status,
+        batch_year,
+        degree_name,
         role: validRole,
       });
-
-      Alert.alert('Success', 'Registration successful! Please log in.');
+      console.log(response.data);
+      Alert.alert('Success', 'Registration successful!');
       router.replace('/'); // Go to login
     } catch (err: any) {
       console.error('Registration error:', err.response?.data || err.message);
@@ -52,7 +62,7 @@ export default function RegisterScreen() {
       if (err.response?.status === 409) {
         Alert.alert(
           'Already Registered',
-          'You are already registered. Please log in.',
+          'This user is already registered.',
           [
             {
               text: 'OK',
@@ -89,11 +99,35 @@ export default function RegisterScreen() {
       />
       <TextInput
         style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
+        placeholder="roll number of student or faculty"
+        value={roll_number}
+        onChangeText={setRollNumber}
       />
+      <TextInput
+        style={styles.input}
+        placeholder="Enrollment number if role is student"
+        value={enrollment_number}
+        onChangeText={setEnrollmentNumber}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Status should be student or faculty"
+        value={status}
+        onChangeText={setStatus}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="batch of the student - year when student took admission"
+        value={batch_year}
+        onChangeText={setBatchYear}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="degree of student"
+        value={degree_name}
+        onChangeText={setDegreeName}
+      />
+      
 
       <TouchableOpacity
         style={[styles.button, loading && styles.buttonDisabled]}
