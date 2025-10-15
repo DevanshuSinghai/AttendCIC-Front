@@ -19,7 +19,7 @@ export default function TeacherRollCallScreen() {
   const [starting, setStarting] = useState(false);
   const [teacherLocation, setTeacherLocation] = useState<{ lat: number; lng: number } | null>(null);
 
-  const API_URL = 'http://10.85.108.203:5000/api';
+  const API_URL = 'http://192.168.1.39:5000/api';
 
   // Fetch all papers
   const fetchPapers = async () => {
@@ -44,12 +44,13 @@ export default function TeacherRollCallScreen() {
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
+        console.log("give permission");
         Alert.alert('Permission Needed', 'Allow location to set classroom position');
         return;
       }
 
       const { coords } = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.High,
+        accuracy: Location.Accuracy.Highest,
       });
 
       setTeacherLocation({ lat: coords.latitude, lng: coords.longitude });
