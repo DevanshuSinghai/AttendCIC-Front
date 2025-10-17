@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity, ScrollView } from 'react-native';
 import { useAuth } from '../../context/AuthProvider';
 import axios from 'axios';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
 
-const API_URL = 'http://192.168.1.39:5000/api';
+const API_URL = 'http://192.168.1.9:5000/api';
 
 type Paper = {
   paperId: number;
@@ -29,6 +29,36 @@ export default function StudentDashboard() {
   const [enrolledPapers, setEnrolledPapers] = useState<Paper[]>([]);
   const [activeRollCalls, setActiveRollCalls] = useState<RollCall[]>([]);
 
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // let interval: NodeJS.Timeout;
+
+      const fetchDashboard = async () => {
+        if (!token) return;
+        try {
+          const response = await axios.get(`${API_URL}/student/dashboard`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          setOverallAttendance(response.data.overallAttendance || 0);
+          setEnrolledPapers(response.data.enrolledPapers || []);
+          setActiveRollCalls(response.data.activeRollCalls || []);
+        } catch (err: any) {
+          console.error('Dashboard fetch error:', err.response?.data || err.message);
+        }
+      };
+
+      // Fetch immediately
+      fetchDashboard();
+
+      // Poll every 20 seconds while screen is focused
+      let interval = setInterval(fetchDashboard, 20000);
+
+      return () => clearInterval(interval);
+    }, [token])
+  );
+
+
   useEffect(() => {
     if (!token) return;
     const fetchDashboard = async () => {
@@ -40,6 +70,7 @@ export default function StudentDashboard() {
         setEnrolledPapers(response.data.enrolledPapers || []);
         setActiveRollCalls(response.data.activeRollCalls || []);
         console.log(enrolledPapers);
+        console.log(response.data.activeRollCalls);
       } catch (err: any) {
         console.error('Dashboard fetch error:', err.response?.data || err.message);
         Alert.alert('Error', 'Failed to load dashboard');
@@ -56,7 +87,7 @@ export default function StudentDashboard() {
   };
 
   const handleAnswerRollCall = (rollCallId: number) => {
-    router.push(`../roll-call?rollCallId=${rollCallId}`);
+    router.push(`./roll-call?rollCallId=${rollCallId}`);
   };
 
   if (loading) {

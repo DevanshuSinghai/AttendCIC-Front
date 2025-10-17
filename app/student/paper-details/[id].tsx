@@ -4,7 +4,7 @@ import { useLocalSearchParams } from 'expo-router';
 import { useAuth } from '../../../context/AuthProvider';
 import axios from 'axios';
 
-const API_URL = 'http://192.168.1.39:5000/api';
+const API_URL = 'http://192.168.1.9:5000/api';
 
 type AttendanceRecord = {
   class_date: string;

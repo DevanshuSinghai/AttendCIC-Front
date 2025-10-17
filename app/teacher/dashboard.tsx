@@ -2,7 +2,7 @@ import React from 'react';
 import { TouchableOpacity, View, Text} from 'react-native';
 import { Link } from 'expo-router';
 // import { Button } from '@react-navigation/elements';
-// const API_URL = 'http://192.168.1.39:5000/api';
+// const API_URL = 'http://192.168.1.9:5000/api';
 
 
 export default function TeacherDashboard() {

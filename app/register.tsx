@@ -4,7 +4,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
 
 
-const API_URL = `http://192.168.1.39:5000/api`; // Use your computer's IP
+const API_URL = `http://192.168.1.9:5000/api`; // Use your computer's IP
 
 export default function RegisterScreen() {
   const router = useRouter();

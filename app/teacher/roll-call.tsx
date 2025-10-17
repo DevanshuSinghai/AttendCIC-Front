@@ -10,6 +10,7 @@ type Paper = {
   paper_name: string;
 };
 
+
 export default function TeacherRollCallScreen() {
   const { user, token } = useAuth();
   const [papers, setPapers] = useState<Paper[]>([]);
@@ -18,8 +19,9 @@ export default function TeacherRollCallScreen() {
   const [loading, setLoading] = useState(true);
   const [starting, setStarting] = useState(false);
   const [teacherLocation, setTeacherLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const [classCount, setClassCount] = useState<number>(1);
 
-  const API_URL = 'http://192.168.1.39:5000/api';
+  const API_URL = 'http://192.168.1.9:5000/api';
 
   // Fetch all papers
   const fetchPapers = async () => {
@@ -82,6 +84,7 @@ export default function TeacherRollCallScreen() {
           durationMinutes: duration,
           location_lat: teacherLocation.lat,
           location_lng: teacherLocation.lng,
+          class_count: classCount,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -133,6 +136,17 @@ export default function TeacherRollCallScreen() {
       >
         {[5, 10, 15, 20, 30].map(min => (
           <Picker.Item key={min} label={`${min} min`} value={min} />
+        ))}
+      </Picker>
+
+      <Text style={styles.label}>Number of Classes</Text>
+      <Picker
+        selectedValue={classCount}
+        onValueChange={setClassCount}
+        style={styles.picker}
+      >
+        {[1, 2, 3, 4, 5].map(n => (
+          <Picker.Item key={n} label={`${n} class${n > 1 ? 'es' : ''}`} value={n} />
         ))}
       </Picker>
 

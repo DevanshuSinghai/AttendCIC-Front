@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Button, Alert, StyleSheet, ActivityIndicator } from 'react-native';
 import * as LocalAuthentication from 'expo-local-authentication';
 import * as Location from 'expo-location';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthProvider';
 
@@ -21,8 +22,10 @@ export default function RollCallScreen() {
   const [activeRollCall, setActiveRollCall] = useState<ActiveRollCall | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [attendanceMarked, setAttendanceMarked] = useState(false);
+  const navigation = useNavigation();
 
-  const API_URL = 'http://192.168.1.39:5000/api';
+  const API_URL = 'http://192.168.1.9:5000/api';
 
   const fetchActiveRollCall = async () => {
     if (!token || user?.role !== 'student') return;
@@ -30,8 +33,9 @@ export default function RollCallScreen() {
     try {
       const response = await axios.get(`${API_URL}/roll-calls/active`, {
         headers: { Authorization: `Bearer ${token}` }
-      });
+      });   
       setActiveRollCall(response.data);
+      setAttendanceMarked(false); 
     } catch (error: any) {
       console.error('Fetch roll call error:', error);
       Alert.alert('Error', error.response?.data?.error || 'Could not load roll call');
@@ -47,11 +51,11 @@ export default function RollCallScreen() {
   }, [token]);
 
   const handleMarkAttendance = async () => {
-    if (!activeRollCall || !token) return;
+    if (!activeRollCall || !token || attendanceMarked) return; // extra guard
     setSubmitting(true);
 
     try {
-      // 🔐 Biometric Authentication
+      // 🔐 Biometric
       const auth = await LocalAuthentication.authenticateAsync({
         promptMessage: 'Authenticate to mark attendance',
         fallbackLabel: 'Use Passcode',
@@ -59,13 +63,15 @@ export default function RollCallScreen() {
 
       if (!auth.success) {
         Alert.alert('Authentication Failed', 'Please try again.');
+        setSubmitting(false);
         return;
       }
 
-      // 📍 Request Location
+      // 📍 Location
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Permission Required', 'Location access is required to mark attendance.');
+        Alert.alert('Permission Required', 'Location access is required.');
+        setSubmitting(false);
         return;
       }
 
@@ -73,7 +79,7 @@ export default function RollCallScreen() {
         accuracy: Location.Accuracy.High,
       });
 
-      // 📤 Submit to backend
+      // 📤 Submit
       const response = await axios.post(
         `${API_URL}/roll-calls/${activeRollCall.id}/attend`,
         {
@@ -87,11 +93,16 @@ export default function RollCallScreen() {
 
       if (isWithinRadius) {
         Alert.alert('Success', 'Attendance marked successfully!');
-        fetchActiveRollCall(); // refresh
+        setAttendanceMarked(true);
+
+        // Navigate after 1 second
+        setTimeout(() => {
+          navigation.goBack(); // or .goBack()
+        }, 1000);
       } else {
         Alert.alert(
           'Outside Range',
-          `You are ${distance}m away. Must be within ${allowedRadius}m of classroom.`
+          `You are ${distance}m away. Must be within ${allowedRadius}m.`
         );
       }
     } catch (error: any) {
@@ -132,11 +143,13 @@ export default function RollCallScreen() {
         Ends at: {new Date(activeRollCall.end_time).toLocaleTimeString()}
       </Text>
       
-      {isExpired ? (
-        <Text style={styles.expired}>This roll call has ended.</Text>
+      {isExpired || attendanceMarked ? (
+        <Text style={styles.expired}>
+          {attendanceMarked ? 'Attendance already marked.' : 'This roll call has ended.'}
+        </Text>
       ) : (
         <Button
-          title={submitting ? "Submitting..." : "Mark Attendance"}
+          title={submitting ? 'Submitting...' : 'Mark Attendance'}
           onPress={handleMarkAttendance}
           disabled={submitting}
           color="#007AFF"
