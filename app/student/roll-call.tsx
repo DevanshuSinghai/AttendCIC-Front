@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthProvider';
 
+import Constants from "expo-constants"
+
 type ActiveRollCall = {
   id: number;
   paper_number: number;
@@ -24,8 +26,9 @@ export default function RollCallScreen() {
   const [submitting, setSubmitting] = useState(false);
   const [attendanceMarked, setAttendanceMarked] = useState(false);
   const navigation = useNavigation();
-
-  const API_URL = 'http://192.168.1.9:5000/api';
+  
+  const API_URL = Constants.expoConfig?.extra?.API_URL;
+  // const API_URL = 'http://192.168.1.9:5000/api';
 
   const fetchActiveRollCall = async () => {
     if (!token || user?.role !== 'student') return;

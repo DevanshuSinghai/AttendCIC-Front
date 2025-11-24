@@ -1,8 +1,11 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
+import  Constants from 'expo-constants';
 
-const API_URL = 'http://192.168.1.9:5000/api';
+const API_URL = Constants.expoConfig?.extra?.API_URL;
+
+// const API_URL = 'http://192.168.1.9:5000/api';
 
 type User = {
   id:number,
@@ -72,13 +75,13 @@ export const AuthProvider = ({children}: {children: React.ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      // console.log("in autpro")
+      
       const response = await axios.post(`${API_URL}/auth/login`,{
         email,
         password
       }        
       )
-      // console.log(response.data);
+      console.log(response.data);
       const {token: newToken, user: newUser} = response.data;
 
       await SecureStore.setItemAsync('auth_token', newToken);

@@ -3,8 +3,11 @@ import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useAuth } from '../../../context/AuthProvider';
 import axios from 'axios';
+import Constants from "expo-constants"
 
-const API_URL = 'http://192.168.1.9:5000/api';
+const API_URL = Constants.expoConfig?.extra?.API_URL;
+
+// const API_URL = 'http://192.168.1.9:5000/api';
 
 type AttendanceRecord = {
   class_date: string;

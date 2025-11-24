@@ -29,7 +29,8 @@ function AuthWrapper() {
       
       {/* Keep these for direct access (optional) */}
       <Stack.Screen name="student/dashboard" options={{ headerShown: false }} />
-      <Stack.Screen name="teacher/dashboard" options={{ headerShown: false }} />
+      <Stack.Screen name="teacher/dashboard" options={{ title:'', headerShown: false }} />
+      {/* <Stack.Screen name="(teacher)" options={{ title:'', headerShown: false }} /> */}
       <Stack.Screen name="admin/dashboard" options={{ headerShown: false }} />
     </Stack>
   );

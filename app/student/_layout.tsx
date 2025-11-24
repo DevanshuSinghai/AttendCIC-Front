@@ -12,8 +12,9 @@ export default function StudentTabs() {
           borderTopWidth: 1,
           borderTopColor: '#eee',
         },
-        headerStyle: { backgroundColor: '#fff' },
-        headerShadowVisible: false,
+        // headerStyle: { backgroundColor: '#fff' },
+        // headerShadowVisible: false,
+        headerShown: false,
       }}
     >
       {/* Home Tab */}

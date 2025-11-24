@@ -12,8 +12,9 @@ export default function TeacherTabs() {
           borderTopWidth: 1,
           borderTopColor: '#eee',
         },
-        headerStyle: { backgroundColor: '#fff' },
-        headerShadowVisible: false,
+        // headerStyle: { backgroundColor: '#fff' },
+        // headerShadowVisible: false,
+        headerShown: false,
       }}
     >
       {/* Home Tab */}
@@ -48,14 +49,22 @@ export default function TeacherTabs() {
         name="roll-call"
         options={{ href: null }} 
       />
-      {/* <Tabs.Screen
-        name="roll-call"
+      <Tabs.Screen
+        name='get-attendance'
+        options={{href: null}}
+      />
+      <Tabs.Screen
+        name="edit-roll-call"
         options={{ href: null }} 
       />
       <Tabs.Screen
-        name="paper-details/[id]"
+        name="papers"
         options={{ href: null }}
-      /> */}
+      />
+      <Tabs.Screen
+        name='edit-attendance/[rollCallId]'
+        options={{href:null}}
+      />
     </Tabs>
   );
 }

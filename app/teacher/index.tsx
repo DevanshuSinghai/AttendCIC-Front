@@ -44,6 +44,6 @@ import { Redirect } from 'expo-router';
 // This makes /student a valid route
 // But immediately redirects to dashboard (which is a tab)
 export default function TeacherIndex() {
-  console.log("bchjfh")
+
   return <Redirect href="/teacher/dashboard" />;
 }

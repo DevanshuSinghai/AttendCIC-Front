@@ -4,6 +4,8 @@ import { Picker } from '@react-native-picker/picker'
 import * as Location from 'expo-location';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthProvider';
+import Constants from "expo-constants"
+
 
 type Paper = {
   paper_number: number;
@@ -20,8 +22,9 @@ export default function TeacherRollCallScreen() {
   const [starting, setStarting] = useState(false);
   const [teacherLocation, setTeacherLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [classCount, setClassCount] = useState<number>(1);
-
-  const API_URL = 'http://192.168.1.9:5000/api';
+  
+  const API_URL = Constants.expoConfig?.extra?.API_URL;
+  // const API_URL = 'http://192.168.1.9:5000/api';
 
   // Fetch all papers
   const fetchPapers = async () => {

@@ -3,8 +3,11 @@ import { View, Text, StyleSheet, Alert, TouchableOpacity, ScrollView } from 'rea
 import { useAuth } from '../../context/AuthProvider';
 import axios from 'axios';
 import { useRouter, useFocusEffect } from 'expo-router';
+import Constants  from 'expo-constants';
 
-const API_URL = 'http://192.168.1.9:5000/api';
+
+const API_URL = Constants.expoConfig?.extra?.API_URL;
+// const API_URL = 'http://192.168.1.9:5000/api';
 
 type Paper = {
   paperId: number;
@@ -36,6 +39,7 @@ export default function StudentDashboard() {
 
       const fetchDashboard = async () => {
         if (!token) return;
+        console.log(API_URL);
         try {
           const response = await axios.get(`${API_URL}/student/dashboard`, {
             headers: { Authorization: `Bearer ${token}` },

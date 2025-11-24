@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, Image, TextInput, Alert } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image, TextInput, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '@/context/AuthProvider'; 
 import { useRouter } from 'expo-router';
 
@@ -30,8 +31,12 @@ export default function LoginScreen() {
     }
   };
 
-  const handleRegister = () => {
-    router.push('/RoleSelection');
+  // const handleRegister = () => {
+  //   router.push('/RoleSelection');
+  // };
+
+  const handleForgetPassword = () => {
+    router.push('/ForgetPassword');
   };
 
   return (
@@ -52,12 +57,14 @@ export default function LoginScreen() {
             style={styles.input}
             placeholder="Email"
             value={email}
+            placeholderTextColor="#999"
             onChangeText={setEmail}
             keyboardType="email-address"
             autoCapitalize="none"
           />
           <TextInput
             style={styles.input}
+            placeholderTextColor="#999"
             placeholder="Password"
             value={password}
             onChangeText={setPassword}
@@ -82,10 +89,10 @@ export default function LoginScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.registerButton}
-            onPress={handleRegister}
-          >
-            <Text style={styles.registerButtonText}>Register</Text>
+            style={styles.forgetPassword}
+            onPress={handleForgetPassword}
+          > 
+            <Text style={styles.forgetPasswordText}>Forget Password ?</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -155,7 +162,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
   },
-  registerButton: {
+  forgetPassword: {
     backgroundColor: "transparent",
     borderWidth: 2,
     borderColor: "#1976D2",
@@ -170,7 +177,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
   },
-  registerButtonText: {
+  forgetPasswordText: {
     color: "#1976D2",
     fontSize: 18,
     fontWeight: "600",
