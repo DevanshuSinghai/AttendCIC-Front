@@ -57,6 +57,12 @@
       },
       "API_URL": "https://attendcic-backend.onrender.com/api"
     },
-    "owner": "devanshusinghai"
+    "owner": "devanshusinghai",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/7a99ccf4-f1e8-4a3c-8a11-9f1680f67e5b"
+    }
   }
 }
